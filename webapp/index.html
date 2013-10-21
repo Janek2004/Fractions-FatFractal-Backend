@@ -20,32 +20,38 @@
   </script>
 
 </head>
-<body>
-<div>
-  <h1>Fractions</h1>
-  <h1 id="baseurl"></h1>
-  <p id="explain"></p>
-  <h2>Attempts</h2>
-<input type="text" id="className"/><input type="button" value="Get Attempts">
+<body style="background-color: black">
 
-<table id="attemptsTable">
-  <tr><td>Attempt</td> <td>Name</td>
-    <td>Score</td> <td>Fractions</td>
-  <td>Date</td>  </tr>
+<table>
+	 <tr><td valign="middle">
+  <img src="facethink.png" height="50" width="30" style="float: left"/> </td><td> <h1>Fractions</h1> 		  
+		  
+	 </td></tr>	 
+</table>
+ 
+<div style="width: 80%; margin: auto">
+  
+  <h2>Attempts</h2>  
+<input type="text" id="className"/>
+<input type="button" value="Check Progress" onclick="reloadAttempts()"><a href="about.html" style="">Teacher's Guide</a>
+<table id="attemptsTable" border=1 >
+  <tr><td>Activity</td><td>Name</td><td>Score</td> <td>Fractions</td> <td>Date</td> </tr>
   </table>
 </div>    
   
 </body>
 <script type='text/javascript'>
-  var baseEl = document.getElementById('baseurl');
-  var re = /\/index.html$/;
-  var app = window.location.pathname.replace(re, "");
-  var appName = app.slice(1);
-  var host = window.location.hostname + (window.location.port ? ":" + window.location.port : "");
-  baseEl.innerHTML = host + app;
-  var explainEl = document.getElementById('explain');
-  explainEl.innerHTML = "Application: " + appName + " is running on " + host;
-  window.document.title = "Application: " + appName + " default index.html page"
+  
+  //var baseEl = document.getElementById('baseurl');
+  //var re = /\/index.html$/;
+  //var app = window.location.pathname.replace(re, "");
+  //var appName = app.slice(1);
+  //var host = window.location.hostname + (window.location.port ? ":" + window.location.port : "");
+  //baseEl.innerHTML = host + app;
+  
+  // var explainEl = document.getElementById('explain');
+  // explainEl.innerHTML = "Application: " + appName + " is running on " + host;
+  // window.document.title = "Application: " + appName + " default index.html page"
   var ff = new FatFractal();
 </script>
 </html>

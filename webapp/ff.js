@@ -3,31 +3,37 @@ $(document).ready(function () {
   		//your code here
 			// initialize the FatFractal library
   
- 		 var attempt = function () {
-        //this.furnitureType = null; this.furnitureStyle = null;
+        var attempt = function () {
+      
         this.clazz = "MFAttempt"; this.guid = null; this.version = null;
     };
 		reloadAttempts()
 	
 		});
 	
-	  function getAttempts(){
-	
-		}
+
 
 	
-		function reloadAttempts(){
-		 var url = "ff/resources/MFAttempt";
-		 if($("#className").text().length >0)
+function reloadAttempts(){
+		 console.log("Value"+$("#className").val());
+                 console.log("Text"+$("#className").text());
+$(document).ready(function() {$("#attemptsTable").find("tr:gt(0)").remove();});
+                 var url = "ff/resources/MFAttempt";
+		 if($("#className").val().length >0)
 			{
-				url = "ff/resources/MFAttempt?mfclassId = '"+$("#className").text()+"'";
+				url = "ff/resources/MFAttempt/(mfclassId eq '"+$("#className").val()+"')";
 			}
 			else{
-				return;
+                                  console.log("nope");
+                        	return;
 			}
+                        
+                        console.log("URL "+url);
 		  
     	fat_fractal.getArrayFromUri(url, function(returnedData, statusMessage) {
+                
                 if (returnedData != null) {
+                 
                     for (var i = 0; i < returnedData.length; i++) {
      									 var date = new Date(returnedData[i].attempt_date);
 											 var n = returnedData[i].name;
@@ -38,10 +44,12 @@ $(document).ready(function () {
 	  										}
 		
 											 var date_sts =date.getFullYear()+"/"+date.getMonth()+" " +date.getHours()+":"+date.getMinutes();
-                     	 var score = returnedData[i].score;									 
-											 var nr = i+1;
+                     	 var score = returnedData[i].score;
+                         var activity = returnedData[i].activity;
+			 var nr = i+1;
+                                                                                         
 											 
-											 $("#attemptsTable").append("<tr><td>"+nr+"</td><td>"+n+"</td><td>"+score +"</td><td>"+fr_str+"</td><td>"+date+"</td></tr>");
+			$("#attemptsTable").append("<tr><td>"+activity+"</td><td>"+n+"</td><td>"+score +"</td><td>"+fr_str+"</td><td>"+date+"</td></tr>");
 										
 										}
                 }
