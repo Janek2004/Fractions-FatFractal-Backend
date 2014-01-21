@@ -1,4 +1,8 @@
- var fat_fractal = new FatFractal();
+var fat_fractal = new FatFractal();
+var currentTeacher = null;
+
+
+
 
 var Teacher = function(){
 	this.username;
@@ -6,6 +10,25 @@ var Teacher = function(){
 	this.school;
 	this.clazz = 'MFTeacher';
 };
+
+$(document).on("pagechange",function(event,data){
+	 var currentPage = $.mobile.activePage.attr('id');
+	if(currentPage === "registrationPage"){
+		
+		}
+if(currentPage === "coursesPage"){
+				
+	}
+});
+
+
+//registration page
+function coursesPageInit(){
+		//get all courses for teacher
+		
+}
+
+
 
 //does exist
 function checkTeacher(successCallback, teacher){
@@ -21,13 +44,13 @@ function checkTeacher(successCallback, teacher){
 
 function registerSuccess(returnedData, statusMessage, teacher)
 {
-	console.log(" L " + returnedData.length)
+	
 	if(returnedData.length ==0){
 	//proceed
 	fat_fractal.createObjAtUri(teacher, "MFTeacher",
                 function(returnedData, statusMessage) {
 			console.log(statusMessage);
-			$("#regStatusMessage").val('User created. <a href="index.html"> Go back </a> to log in.');		
+			$("#regStatusMessage").append('User created. <a href="index.html"> Go back </a> to log in.');		
 		},
                 function(statusCode, statusMessage) { alert("Failed to register user: " + statusMessage); });
 	}
@@ -37,9 +60,19 @@ function registerSuccess(returnedData, statusMessage, teacher)
 	}
 }
 
-function registerError(){
-
-	
+function loginSuccess(returnedData,statusMessage,teacher){
+	console.log("Return data"+statusMessage);
+	if(returnedData.length ==1){
+		//user found redirect to the user's page
+		//set current teacher 
+		 currentTeacher = teacher;
+		$.mobile.changePage("#coursesPage");
+		
+	}
+	if(returnedData.length ==0)
+	{
+		
+	}
 }
 
 
@@ -63,44 +96,24 @@ function register(username, password, school){
 			return;
 		
 	}
-		
-		
+}
+
+function logoutUser(){
+	currentTeacher = null;
+	//move to the login page
+	
 }
 
 //logging in user
 function login_user(username, password){
 	console.log("_"+username.val());
 	console.log("_"+password.val());
-
-//check if teacher object exist for given username and password
-var url = "ff/resources/MFTeacher/((username eq '"+username.val()+") and (password eq '"+password.val+"')')";
-	fat_fractal.getArrayFromUri(url, function(returnedData, statusMessage) {
-			console.log("Status Message" + statusMessage)
-			
-		});	 
-    		
-
-
-/*	
-ff.login(username.val(), password.val(),
-    function (loggedInUser) {
-        // successfully logged in
-	//redirect
-	console.log("Success");
-	$.mobile.changePage( "#registrationPage", { transition: "slideup", changeHash: false });	
-    
-    
-    
-    },
-    
-    function (statusCode, statusMessage) {
-        // error occurred
-	console.log("Error "+ statusMessage);
-	console.log("Error "+ statusMessage.statusMessage);
-	$("#statusMessage").val(statusMessage.statusMessage);
+	var temp_teacher = new Teacher();
+	temp_teacher.username =username.val(); 
+	temp_teacher.password =password.val(); 
 	
-    });
-    */
+	checkTeacher(loginSuccess,temp_teacher);
+
 }
 
 
@@ -109,15 +122,31 @@ $(document).ready(function () {
   		//your code here
 			// initialize the FatFractal library
   
-        var attempt = function () {
+     var attempt = function () {
       
         this.clazz = "MFAttempt"; this.guid = null; this.version = null;
     };
 		//reloadAttempts()
 	
-		});
+	ff.login("cdt_user", "Stany174",
+    function (loggedInUser) {
+
+	console.log("Success");
+	//$.mobile.changePage( "#registrationPage", { transition: "slideup", changeHash: false });	
+    
+    
+    
+    },
+    
+    function (statusCode, statusMessage) {
+        // error occurred
+	console.log("Error "+ statusMessage);	
+    });
+
+});
+
 	
-	
+/*	
 function reloadAttempts(){
 $(document).ready(function() {$("#attemptsTable").find("tr:gt(0)").remove();});
      var url = "ff/resources/MFAttempt";
@@ -166,7 +195,7 @@ $(document).ready(function() {$("#attemptsTable").find("tr:gt(0)").remove();});
 			
 			}
 		
-
+*/
 /* 
     // the "viewModel" which we attach to our html using KnockoutJS
     var viewModel = {

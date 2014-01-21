@@ -1,17 +1,14 @@
 <html>
-
 <head>
 <!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>-->
-  <script src="//code.jquery.com/jquery-latest.min.js"        type="text/javascript"></script>
-  
-   <script type="text/javascript" src="//www.fatfractal.com/prod/js/FatFractal.latest.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/common.css" media="screen"/>
-   <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/knockout/knockout-2.1.0.js"></script>
-    <script type="text/javascript" src="js/ff.js"></script>
-   <link rel="stylesheet" href="css/jquery.mobile-1.4.0.min.css" />
-   <script src="js/jquery.mobile-1.4.0.min.js"></script>
-    
-  <script type="text/javascript">
+<script src="//code.jquery.com/jquery-latest.min.js"        type="text/javascript"></script>
+<script type="text/javascript" src="//www.fatfractal.com/prod/js/FatFractal.latest.js"></script>
+<link rel="stylesheet" type="text/css" href="css/common.css" media="screen"/>
+<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/knockout/knockout-2.1.0.js"></script>
+<script type="text/javascript" src="js/ff.js"></script>
+<link rel="stylesheet" href="css/jquery.mobile-1.4.0.min.css" />
+<script src="js/jquery.mobile-1.4.0.min.js"></script>
+<script type="text/javascript">
     function httpsRedirect() {
       var httpURL = window.location.hostname + window.location.pathname;
       var httpsURL = "https://" + httpURL;
@@ -21,94 +18,78 @@
     if (!window.location.href.match('^https://') && !window.location.href.match('^http://localhost'))
       httpsRedirect();
   </script>
-
 </head>
 <body style="background-color: black">
-
-
 <div data-role="page" id="loginPage">
-	 <div data-role="header">
-		  <h1>Fractionville</h1>
-	 </div>
-	 <div data-role="content">
-		 
-		
-		<input type="text" id="login_name" placeholder="username"/>
-	        <input type="password" id="login_password" placeholder="password"/>
-	 <a href="#" date-role="button" onclick='login_user($("#login_name"),$("#login_password"))'>Login</a>
-	 <a href="#registrationPage" date-role="button">Register</a>			   
-	 
-	 <p id="statusMessage">
-		  		  
-	 </p>		  
-		  
-	 </div>
-
-	 <div data-role="footer"  data-position="fixed"></div>
-	 
+  <div data-role="header">
+    <h1>Fractionville</h1>
+  </div>
+  <div data-role="content">
+    <input type="text" id="login_name" placeholder="username"/>
+    <input type="password" id="login_password" placeholder="password"/>
+    <a href="#" data-role="button" onclick='login_user($("#login_name"),$("#login_password"))'>Login</a> <a href="#registrationPage" data-role="button">Register</a>
+    <p id="statusMessage"> </p>
+    <a href="https://itunes.apple.com/us/app/fractionville/id765951254?ls=1&mt=8" target="_blank"><img src="resources/App_Store_Badge_EN_small.png" />
+    </a>
+    
+  </div>
+  <div data-role="footer"  data-position="fixed"></div>
 </div>
-
 <div data-role="page" id="registrationPage">
-	 <div data-role="header">
-		  <h1>Fractionville</h1>
-	 </div>
-	 <div data-role="content">
-		  <input type="text" id="register_name" placeholder="username"/>
-	 	  <input type="password" id="register_password" placeholder="password"/>	
-	 	  <input type="text" id="register_school" placeholder="school"/>	
-	 	 <input type="button" href="#"  onclick='register($("#register_name"),$("#register_password"),$("#register_school"))' value="Register User"/>
-	 </div>
-	 <div data-role="footer"  data-position="fixed"></div>
+  <div data-role="header">
+    <h1>Fractionville</h1>
+  </div>
+  <div data-role="content">
+    <input type="text" id="register_name" placeholder="username"/>
+    <input type="password" id="register_password" placeholder="password"/>
+    <input type="text" id="register_school" placeholder="school"/>
+    <input type="button" href="#"  onclick='register($("#register_name"),$("#register_password"),$("#register_school"))' value="Register User"/>
+    <p id="regStatusMessage"> </p>
+    
+  </div>
+  <div data-role="footer"  data-position="fixed"></div>
 </div>
 
-<div data-role="page" id="checkCourseId">
-	 <div data-role="header">
-		  <h1>Fractionville</h1>
-	 </div>
-	 <div data-role="content">
-	<input type="text" placeholder="class id"/>
-	 <input type="button" value="Add ClassId" onclick="addClassId($("#class_id"))" />
-		  
-	 </div>
-	 <div data-role="footer"  data-position="fixed"></div>	 
+<div data-role="page" id="coursesPage">
+  <div data-role="header">
+    <h1>Fractionville</h1>
+  </div>
+  <div data-role="content">
+    <input type="text" placeholder="class id"/>
+    <input type="button" value="Add ClassId" onClick="addClassId($("#class_id"))" />
+  </div>
+  <div data-role="footer"  data-position="fixed"></div>
 </div>
-
-
-
-<div data-role="page" id="checkCourseId">
-	 <div data-role="header">
-		  <h1>Fractionville</h1>
-	 </div>
-	 <div data-role="content">
-		  
-		  
-	 </div>
-	 <div data-role="footer"  data-position="fixed"></div>	 
-</div>
-
-
-
-
 
 <!---
+
+<a href="https://itunes.apple.com/us/app/fractionville/id765951254?ls=1&mt=8" style="float:right" target="_blank"><img src="App_Store_Badge_EN.png" width="20%"/></a>
+
 <table>
 	 <tr><td valign="middle">
-  <img src="facethink.png" height="50" width="30" style="float: left"/> </td><td> <h1>Fractions</h1> 		  
-		  
+     <img src="facethink.png" height="50" width="30" style="float: left"/> </td><td> <h1>Fractions</h1> 		  
 	 </td></tr>	 
 </table>
  
 <div style="width: 80%; margin: auto">
+  <h4>Instructions</h4>
+  <ol>
+  	<li><a href="https://itunes.apple.com/us/app/fractionville/id765951254?ls=1&mt=8" target="_blank">Download</a> the app </li>
+  	<li>Think about ClassId that you will be used to track their progress</li>
+  	<li>Ask students to set their usernames and the classId</li>    
+		<li>Let students play with app</li>
+  	<li>Enter the classId in the text field below and click on the Check Progress button to see the attempts.</li>
   
-  <h2>Attempts</h2>  
+  </ol>
+  <h4>Attempts</h4>  
 <input type="text" id="className"/>
-<input type="button" value="Check Progress" onclick="reloadAttempts()"><a href="about.html" style="">Teacher's Guide</a>
+<input type="button" value="Check Progress" onClick="reloadAttempts()"><a href="about.html" style="">Teacher's Guide</a>
 <table id="attemptsTable" border=1 >
   <tr><td>Activity</td><td>Name</td><td>Score</td> <td>Fractions</td> <td>Date</td> </tr>
   </table>
 </div>    
   --->
-  
+
 </body>
 <script type='text/javascript'>
   
