@@ -47,7 +47,8 @@
     <p id="regStatusMessage"> </p>
     
   </div>
-  <div data-role="footer"  data-position="fixed"></div>
+  <div data-role="footer"  data-position="fixed">
+  </div>
 </div>
 
 <div data-role="page" id="coursesPage">
@@ -55,8 +56,14 @@
     <h1>Fractionville</h1>
   </div>
   <div data-role="content">
-    <input type="text" placeholder="class id"/>
-    <input type="button" value="Add ClassId" onClick="addClassId($("#class_id"))" />
+
+      <input type="text" placeholder="Enter Course I.D." id="course_id"/>
+	    <input type="button" value="Add new Course ID" onClick='addNewClass($("#course_id"))' />
+
+  <p id="courseStatusMessage"> </p>
+  	<ul data-role="listview" id="course_list_view"> 
+    	<li data-role="list-divider">List of Courses </li>	
+    </ul>
   </div>
   <div data-role="footer"  data-position="fixed"></div>
 </div>
