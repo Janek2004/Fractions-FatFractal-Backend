@@ -1,13 +1,16 @@
 <html>
 
 <head>
-	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>-->
+  <script src="//code.jquery.com/jquery-latest.min.js"        type="text/javascript"></script>
+  
    <script type="text/javascript" src="//www.fatfractal.com/prod/js/FatFractal.latest.js"></script>
-    <link rel="stylesheet" type="text/css" href="common.css" media="screen"/>
-   
-    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/knockout/knockout-2.1.0.js"></script>
-    <script type="text/javascript" src="ff.js"></script>
-
+    <link rel="stylesheet" type="text/css" href="css/common.css" media="screen"/>
+   <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/knockout/knockout-2.1.0.js"></script>
+    <script type="text/javascript" src="js/ff.js"></script>
+   <link rel="stylesheet" href="css/jquery.mobile-1.4.0.min.css" />
+   <script src="js/jquery.mobile-1.4.0.min.js"></script>
+    
   <script type="text/javascript">
     function httpsRedirect() {
       var httpURL = window.location.hostname + window.location.pathname;
@@ -22,6 +25,72 @@
 </head>
 <body style="background-color: black">
 
+
+<div data-role="page" id="loginPage">
+	 <div data-role="header">
+		  <h1>Fractionville</h1>
+	 </div>
+	 <div data-role="content">
+		 
+		
+		<input type="text" id="login_name" placeholder="username"/>
+	        <input type="password" id="login_password" placeholder="password"/>
+	 <a href="#" date-role="button" onclick='login_user($("#login_name"),$("#login_password"))'>Login</a>
+	 <a href="#registrationPage" date-role="button">Register</a>			   
+	 
+	 <p id="statusMessage">
+		  		  
+	 </p>		  
+		  
+	 </div>
+
+	 <div data-role="footer"  data-position="fixed"></div>
+	 
+</div>
+
+<div data-role="page" id="registrationPage">
+	 <div data-role="header">
+		  <h1>Fractionville</h1>
+	 </div>
+	 <div data-role="content">
+		  <input type="text" id="register_name" placeholder="username"/>
+	 	  <input type="password" id="register_password" placeholder="password"/>	
+	 	  <input type="text" id="register_school" placeholder="school"/>	
+	 	 <input type="button" href="#"  onclick='register($("#register_name"),$("#register_password"),$("#register_school"))' value="Register User"/>
+	 </div>
+	 <div data-role="footer"  data-position="fixed"></div>
+</div>
+
+<div data-role="page" id="checkCourseId">
+	 <div data-role="header">
+		  <h1>Fractionville</h1>
+	 </div>
+	 <div data-role="content">
+	<input type="text" placeholder="class id"/>
+	 <input type="button" value="Add ClassId" onclick="addClassId($("#class_id"))" />
+		  
+	 </div>
+	 <div data-role="footer"  data-position="fixed"></div>	 
+</div>
+
+
+
+<div data-role="page" id="checkCourseId">
+	 <div data-role="header">
+		  <h1>Fractionville</h1>
+	 </div>
+	 <div data-role="content">
+		  
+		  
+	 </div>
+	 <div data-role="footer"  data-position="fixed"></div>	 
+</div>
+
+
+
+
+
+<!---
 <table>
 	 <tr><td valign="middle">
   <img src="facethink.png" height="50" width="30" style="float: left"/> </td><td> <h1>Fractions</h1> 		  
@@ -38,6 +107,7 @@
   <tr><td>Activity</td><td>Name</td><td>Score</td> <td>Fractions</td> <td>Date</td> </tr>
   </table>
 </div>    
+  --->
   
 </body>
 <script type='text/javascript'>

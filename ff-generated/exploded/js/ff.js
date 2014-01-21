@@ -1,4 +1,110 @@
  var fat_fractal = new FatFractal();
+
+var Teacher = function(){
+	this.username;
+	this.password;
+	this.school;
+	this.clazz = 'MFTeacher';
+};
+
+//does exist
+function checkTeacher(successCallback, teacher){
+	
+	var url = "ff/resources/MFTeacher/((username eq '"+teacher.username+"') and (password eq '"+teacher.password+"'))";
+	fat_fractal.getArrayFromUri(url, function(returnedData, statusMessage) {
+			
+			console.log("Status Message" + statusMessage)
+			successCallback(returnedData,statusMessage,teacher);
+			
+		});	
+}
+
+function registerSuccess(returnedData, statusMessage, teacher)
+{
+	console.log(" L " + returnedData.length)
+	if(returnedData.length ==0){
+	//proceed
+	fat_fractal.createObjAtUri(teacher, "MFTeacher",
+                function(returnedData, statusMessage) {
+			console.log(statusMessage);
+			$("#regStatusMessage").val('User created. <a href="index.html"> Go back </a> to log in.');		
+		},
+                function(statusCode, statusMessage) { alert("Failed to register user: " + statusMessage); });
+	}
+	if(returnedData.length >0){
+		$("#regStatusMessage").val('Username already exists.');
+		
+	}
+}
+
+function registerError(){
+
+	
+}
+
+
+//register user
+function register(username, password, school){
+	//add validation
+	
+	var teacher = new Teacher();
+	if((username.val().length >0 )&& (password.val().length>0) && (school.val().length>0)){
+		
+	  teacher.username = username.val();
+	  teacher.password = password.val();
+	  teacher.school = school.val();
+
+	  checkTeacher(registerSuccess,teacher);
+	  
+	}
+	else{
+		console.log("All fields are required");
+		
+			return;
+		
+	}
+		
+		
+}
+
+//logging in user
+function login_user(username, password){
+	console.log("_"+username.val());
+	console.log("_"+password.val());
+
+//check if teacher object exist for given username and password
+var url = "ff/resources/MFTeacher/((username eq '"+username.val()+") and (password eq '"+password.val+"')')";
+	fat_fractal.getArrayFromUri(url, function(returnedData, statusMessage) {
+			console.log("Status Message" + statusMessage)
+			
+		});	 
+    		
+
+
+/*	
+ff.login(username.val(), password.val(),
+    function (loggedInUser) {
+        // successfully logged in
+	//redirect
+	console.log("Success");
+	$.mobile.changePage( "#registrationPage", { transition: "slideup", changeHash: false });	
+    
+    
+    
+    },
+    
+    function (statusCode, statusMessage) {
+        // error occurred
+	console.log("Error "+ statusMessage);
+	console.log("Error "+ statusMessage.statusMessage);
+	$("#statusMessage").val(statusMessage.statusMessage);
+	
+    });
+    */
+}
+
+
+
 $(document).ready(function () {
   		//your code here
 			// initialize the FatFractal library
@@ -7,7 +113,7 @@ $(document).ready(function () {
       
         this.clazz = "MFAttempt"; this.guid = null; this.version = null;
     };
-		reloadAttempts()
+		//reloadAttempts()
 	
 		});
 	
