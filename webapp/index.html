@@ -26,6 +26,7 @@
 <body style="background-color: black">
 
 
+
 <div data-role="page" id="loginPage">
 	 <div data-role="header">
 		  <h1>Fractionville</h1>
@@ -91,18 +92,28 @@
 
 
 <!---
+
+<a href="https://itunes.apple.com/us/app/fractionville/id765951254?ls=1&mt=8" style="float:right" target="_blank"><img src="App_Store_Badge_EN.png" width="20%"/></a>
+
 <table>
 	 <tr><td valign="middle">
-  <img src="facethink.png" height="50" width="30" style="float: left"/> </td><td> <h1>Fractions</h1> 		  
-		  
+     <img src="facethink.png" height="50" width="30" style="float: left"/> </td><td> <h1>Fractions</h1> 		  
 	 </td></tr>	 
 </table>
  
 <div style="width: 80%; margin: auto">
+  <h4>Instructions</h4>
+  <ol>
+  	<li><a href="https://itunes.apple.com/us/app/fractionville/id765951254?ls=1&mt=8" target="_blank">Download</a> the app </li>
+  	<li>Think about ClassId that you will be used to track their progress</li>
+  	<li>Ask students to set their usernames and the classId</li>    
+		<li>Let students play with app</li>
+  	<li>Enter the classId in the text field below and click on the Check Progress button to see the attempts.</li>
   
-  <h2>Attempts</h2>  
+  </ol>
+  <h4>Attempts</h4>  
 <input type="text" id="className"/>
-<input type="button" value="Check Progress" onclick="reloadAttempts()"><a href="about.html" style="">Teacher's Guide</a>
+<input type="button" value="Check Progress" onClick="reloadAttempts()"><a href="about.html" style="">Teacher's Guide</a>
 <table id="attemptsTable" border=1 >
   <tr><td>Activity</td><td>Name</td><td>Score</td> <td>Fractions</td> <td>Date</td> </tr>
   </table>

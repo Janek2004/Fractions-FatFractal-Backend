@@ -105,4 +105,14 @@
         <url-pattern>/ff/ext</url-pattern>
     </action-mapping>
 
+    <action>
+        <action-name>catchall</action-name>
+        <description>noserver catchall for dynamic routing</description>
+        <action-class>com.fatfractal.noserver.pub.CatchAllAction</action-class>
+    </action>
+    <action-mapping>
+        <action-name>catchall</action-name>
+        <url-pattern>/</url-pattern>
+    </action-mapping>
+
 </fatfractal-app>

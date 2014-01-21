@@ -117,25 +117,20 @@ $(document).ready(function () {
 	
 		});
 	
-
-
 	
 function reloadAttempts(){
-		 console.log("Value"+$("#className").val());
-                 console.log("Text"+$("#className").text());
 $(document).ready(function() {$("#attemptsTable").find("tr:gt(0)").remove();});
-                 var url = "ff/resources/MFAttempt";
+     var url = "ff/resources/MFAttempt";
 		 if($("#className").val().length >0)
 			{
 				url = "ff/resources/MFAttempt/(mfclassId eq '"+$("#className").val()+"')";
 			}
 			else{
-                                  console.log("nope");
+                              
                         	return;
 			}
                         
-                        console.log("URL "+url);
-		  
+	  
     	fat_fractal.getArrayFromUri(url, function(returnedData, statusMessage) {
                 
                 if (returnedData != null) {
@@ -151,11 +146,18 @@ $(document).ready(function() {$("#attemptsTable").find("tr:gt(0)").remove();});
 		
 											 var date_sts =date.getFullYear()+"/"+date.getMonth()+" " +date.getHours()+":"+date.getMinutes();
                      	 var score = returnedData[i].score;
-                         var activity = returnedData[i].activity;
-			 var nr = i+1;
-                                                                                         
+                       var activity = returnedData[i].activity;
+											 var nr = i+1;
+											 var class_name="correct";
+											 if(score ==1){
+													class_name="correct" 
+											 }
+											 else{
+												 class_name="incorrect"
+											}
+											                                                                   
 											 
-			$("#attemptsTable").append("<tr><td>"+activity+"</td><td>"+n+"</td><td>"+score +"</td><td>"+fr_str+"</td><td>"+date+"</td></tr>");
+			$("#attemptsTable").append("<tr><td>"+activity+"</td><td>"+n+"</td><td class='"+class_name+"'>"+class_name +"</td><td>"+fr_str+"</td><td>"+date+"</td></tr>");
 										
 										}
                 }

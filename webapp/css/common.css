@@ -15,6 +15,14 @@ body {
     unicode-bidi: embed;
 }
 
+.correct{
+		color:blue;
+}
+.incorrect{
+		color:red;
+}
+
+
 a {
     cursor: pointer;
     color: #3b5998;
