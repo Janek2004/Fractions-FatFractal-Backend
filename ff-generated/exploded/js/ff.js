@@ -1,5 +1,9 @@
 var fat_fractal = new FatFractal();
 var currentTeacher = null;
+var currentCourse = null;
+var teacherCourses = null;
+var currentStudents = null;
+
 fat_fractal.debug = true;
 
 
@@ -20,18 +24,81 @@ var Course = function(){
 	
 };
 
+var Student = function(){
+	this.classId;
+	this.clazz = 'MFStudent';
+	this.guid = null;
+	this.firstname;
+	this.lastname;
+	this.email;
+	
+};
+
+var Attempt = function(){
+	this.classId;
+	this.clazz = 'MFAttempt';
+	this.guid = null;
+	this.answer;
+	this.question;
+	this.date;
+	this.studentid;
+	this.correct;
+};
 
 $(document).on("pagechange",function(event,data){
+	console.log(" page change  ");
+
 	 var currentPage = $.mobile.activePage.attr('id');
 	if(currentPage === "registrationPage"){
 		
 		}
-if(currentPage === "coursesPage"){
+
+if(currentPage !='loginPage'){
+	if(!currentTeacher){
+		$.mobile.changePage("#loginPage");	
+	
+	}
+	
+}
+if(currentPage === "coursesListPage"){
+			if(!currentTeacher){
+				console.log("Current Teacher Doesn't Exist");
+			}
+			coursesListPageInit();
+			
+	}
+
+if(currentPage === "coursePage"){
+	if(!currentCourse){
+			console.log("Potential Problem - current course shouldn't be null");
+			coursePageInit();
+	}
+
+}		
+});
+
+$(document).on("pageload",function(event,data){
+	console.log(" load  ");
+	 var currentPage = $.mobile.activePage.attr('id');
+/*
+	if(currentPage === "registrationPage"){
+		
+		}
+if(currentPage === "coursesListPage"){
 			if(!currentTeacher){
 					console.log("Current Teacher Doesn't Exist");
-				}
-			coursesPageInit();
+			}
+			coursesListPageInit();
+			
 	}
+
+if(currentPage === "coursePage"){
+	if(!currentCourse){
+			console.log("Potential Problem - current course shouldn't be null");
+			coursePageInit();
+	}
+
+}	*/	
 });
 
 
@@ -44,10 +111,8 @@ function checkTeacher(successCallback, teacher){
 	
 	var url = "ff/resources/MFTeacher/((username eq '"+teacher.username+"') and (password eq '"+teacher.password+"'))";
 	fat_fractal.getArrayFromUri(url, function(returnedData, statusMessage) {
-			
 			console.log("Status Message" + statusMessage)
-			successCallback(returnedData,statusMessage,teacher);
-			
+			successCallback(returnedData,statusMessage,teacher);	
 		});	
 }
 
@@ -71,20 +136,16 @@ function registerSuccess(returnedData, statusMessage, teacher)
 }
 
 function loginSuccess(returnedData,statusMessage,teacher){
-	console.log("Login Return data"+statusMessage + "   " + returnedData[0].guid);
-	
-		
+	console.log("Login Return data"+statusMessage + "   " + returnedData[0].guid);	
 	if(returnedData.length ==1){
 		
 		//set current teacher 
 		 currentTeacher = returnedData[0];
-		 $.mobile.changePage("#coursesPage");//user found redirect to the user's page
-		
+		 $.mobile.changePage("#coursesListPage");//user found redirect to the user's page
 	}
 	else{
 	
-		$("#statusMessage").replaceWith("User not found.");
-		
+		$("#statusMessage").replaceWith("User not found.");	
 	}
 }
 
@@ -128,42 +189,117 @@ function login_user(username, password){
 	checkTeacher(loginSuccess,temp_teacher);
 }
 
+/* __________________________________COURSES MANAGEMENT SECTION __________________________________*/
 
-/* COURSES MANAGEMENT SECTION */
-function coursesPageInit(){
-	console.log("course page init");
-		//get all courses for teacher
-		displayAllCoursesForTeacher(currentTeacher,getCoursesCallback);		
+
+//single page
+function coursePageInit()
+{
+	console.log("course page");	
+	//get students
+	displayAllStudentsForCourse(currentCourse,getStudentsCallback);		
 }
 
-function displayAllCoursesForTeacher(teacher,callback){
-	var url = "ff/resources/MFCourse/(teacherId eq '"+teacher.guid+"')";
+
+function displayAllStudentsForCourse(course, callback)
+{
+	if(!course) {console.log("course is null"); return;}
+	
+	var url = "ff/resources/MFStudent/(classId eq '"+course.classId+"')";
 	fat_fractal.getArrayFromUri(url, function(returnedData, statusMessage) {
 			
 			console.log("Get Courses" + statusMessage)
 			callback(returnedData, statusMessage);
 			
 		});	
+	
 }
 
+function getStudentsCallback(returnedData, statusMessage){
+		
+	currentStudents = returnedData;
+	if(returnedData.length >0){
+		
+	$("#student_list_view").empty();
+	$("#student_list_view").append('<li data-role="list-divider">Students in '+ +' </li>');	
+		
+		for(var i =0; i< returnedData.length;i++){
+		var student = currentStudents[i];
+		$("#student_list_view").append('<li><a href="#" onClick="showProgress(i)">'+student.firstname + " " + student.lastname+'</a></li>');
+					
+		}	
+	}
+	else{
+		$("#student_list_view").append('<li data-role="list-divider">No Students.</li>');
+			
+	}
+	if ( $('#student_list_view').hasClass('ui-listview')) {
+			$('#student_list_view').listview('refresh');
+			} 
+		else {
+			$('#student_list_view').trigger('create');
+		}
+}
+
+
+function showProgress(){
+	
+	
+}
+
+
+
+// LIST OF THE COURSES
+function coursesListPageInit(){
+	console.log("courses list page init");
+	//get all courses for teacher
+	displayAllCoursesForTeacher(currentTeacher,getCoursesCallback);		
+}
+
+function displayAllCoursesForTeacher(teacher,callback){
+	var url = "ff/resources/MFCourse/(teacherId eq '"+teacher.guid+"')";
+	fat_fractal.getArrayFromUri(url, function(returnedData, statusMessage) {
+			
+		console.log("Get Courses" + statusMessage)
+		callback(returnedData, statusMessage);
+			
+	});	
+}
 
 function addNewClass(classId){
 	checkClass(classId.val(), checkClassSuccess);	
 	
 }
 
+//triggered when user clicks on the list view
+function showCourse(courseIndex){
+		//change page and display the content
+		if(teacherCourses.length>0){		      
+		      currentCourse  = teacherCourses[courseIndex];
+		     $.mobile.changePage("#coursePage");
+		}
+}
+
 function getCoursesCallback(returnedData, statusMessage){
 		$("#course_list_view").empty();
 		$("#course_list_view").append('<li data-role="list-divider">List of Courses </li>');	
+		teacherCourses = returnedData;
 		
 		if(returnedData.length >0){
-			var course = returnedData[i];
+		
 			for(var i =0; i< returnedData.length;i++){
-				$("#course_list_view").append("<li>"+course.classId+"</li>");
+					var course = returnedData[i];
+	 				$("#course_list_view").append('<li><a href="#" onClick="showCourse('+i+')">'+course.classId+'</a></li>');
+					
 			}	
 		}
 		
-		$('ul').listview('refresh');
+		if ( $('#course_list_view').hasClass('ui-listview')) {
+			$('#course_list_view').listview('refresh');
+			} 
+		else {
+			$('#course_list_view').trigger('create');
+		}
 }
 
 function checkClassSuccess(returnedData, statusMessage,classId){
@@ -182,9 +318,9 @@ function checkClassSuccess(returnedData, statusMessage,classId){
 	
 				fat_fractal.createObjAtUri(course, "MFCourse",
                         function(returnedData, statusMessage) { 
-												$("#courseStatusMessage").replaceWith("Course ID created. Now share it with your students."); 
+								$("#courseStatusMessage").replaceWith("Course ID created. Now share it with your students."); 
 												
-												},
+								},
                         function(statusCode, statusMessage) { 
 													$("#courseStatusMessage").replaceWith("Error.");
 												});
@@ -193,7 +329,7 @@ function checkClassSuccess(returnedData, statusMessage,classId){
 	
 				
 		}else{
-					$("#regStatusMessage").replaceWith("Course ID already exists.");
+					$("#courseStatusMessage").replaceWith("Course ID already exists.");
 			}
 }
 
@@ -201,7 +337,7 @@ function checkClassSuccess(returnedData, statusMessage,classId){
 function checkClass(classId,successCallback){
 	console.log("classId");
 	
-	var url = "ff/resources/MFCourse/(id eq '"+classId+"')";
+	var url = "ff/resources/MFCourse/(classId eq '"+classId+"')";
 	fat_fractal.getArrayFromUri(url, function(returnedData, statusMessage) {
 			
 			console.log("Check Class Status Message" + statusMessage)

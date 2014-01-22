@@ -35,7 +35,8 @@
   </div>
   <div data-role="footer"  data-position="fixed"></div>
 </div>
-<div data-role="page" id="registrationPage">
+
+<div data-role="page" id="registrationPage" data-add-back-btn="true">
   <div data-role="header">
     <h1>Fractionville</h1>
   </div>
@@ -51,22 +52,40 @@
   </div>
 </div>
 
-<div data-role="page" id="coursesPage">
-  <div data-role="header">
-    <h1>Fractionville</h1>
-  </div>
+<!---- LIST OF THE COURSES ---->
+<div data-role="page" id="coursesListPage" data-add-back-btn="true">
+     <div data-role="header">
+        <h1>Fractionville</h1>
+    </div>
   <div data-role="content">
 
       <input type="text" placeholder="Enter Course I.D." id="course_id"/>
-	    <input type="button" value="Add new Course ID" onClick='addNewClass($("#course_id"))' />
+    <input type="button" value="Add new Course ID" onClick='addNewClass($("#course_id"))' />
 
   <p id="courseStatusMessage"> </p>
+  <br>
+  <br>
   	<ul data-role="listview" id="course_list_view"> 
     	<li data-role="list-divider">List of Courses </li>	
     </ul>
   </div>
   <div data-role="footer"  data-position="fixed"></div>
 </div>
+
+<!--- SINGLE COURSE PAGE WITH LIST OF THE STUDENTS  --->
+<div data-role="page" id="coursePage" data-add-back-btn="true">
+     <div data-role="header">
+        <h1>Fractionville</h1>
+    </div>
+  <div data-role="content">
+  <br>
+  	<ul data-role="listview" id="student_list_view"> 
+	    <li data-role="list-divider">List of Students (courseId) </li>	
+	</ul>
+  </div>
+  <div data-role="footer"  data-position="fixed"></div>
+</div>
+
 
 <!---
 
