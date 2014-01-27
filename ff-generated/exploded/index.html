@@ -36,8 +36,8 @@
   <div data-role="footer"  data-position="fixed"></div>
 </div>
 
-<div data-role="page" id="registrationPage" data-add-back-btn="true" data-back-btn-text="Back">
-  <div data-role="header">
+<div data-role="page" id="registrationPage" >
+  <div data-role="header" data-add-back-btn="true" data-back-btn-text="Back">
     <h1>Fractionville</h1>
   </div>
   <div data-role="content">
@@ -53,8 +53,8 @@
 </div>
 
 <!---- LIST OF THE COURSES ---->
-<div data-role="page" id="coursesListPage" data-add-back-btn="true" data-back-btn-text="Back">
-     <div data-role="header">
+<div data-role="page" id="coursesListPage" >
+     <div data-role="header" data-add-back-btn="true" data-back-btn-text="Back">
         <h1>Fractionville</h1>
     </div>
   <div data-role="content">
@@ -69,12 +69,12 @@
     	<li data-role="list-divider">List of Courses </li>	
     </ul>
   </div>
-  <div data-role="footer"  data-position="fixed"></div>
+  <div data-role="footer"  data-position="fixed">&nbsp;</div>
 </div>
 
 <!--- SINGLE COURSE PAGE WITH LIST OF THE STUDENTS  --->
-<div data-role="page" id="coursePage" data-add-back-btn="true" data-back-btn-text="Back">
-     <div data-role="header">
+<div data-role="page" id="coursePage" >
+     <div data-role="header" data-add-back-btn="true" data-back-btn-text="Back">
         <h1>Fractionville</h1>
     </div>
   <div data-role="content">
@@ -83,8 +83,29 @@
 	    <li data-role="list-divider">List of Students (courseId) </li>	
 	</ul>
   </div>
-  <div data-role="footer"  data-position="fixed"></div>
+  <div data-role="footer"  data-position="fixed">&nbsp;</div>
 </div>
+
+<!--- STUDENT ATTEMPTS  --->
+<div data-role="page" id="studentsAttemptPage" >
+     <div data-role="header" data-add-back-btn="true" data-back-btn-text="Back">
+        <h1>Fractionville</h1>
+    </div>
+  <div data-role="content">
+  	<p id="student_info"></p>
+	<a href="#" onclick="refreshAttempts()" data-role="button"  >Refresh</a>
+  <br>
+  	
+  	<ul data-role="listview" id="student_attempts_list_view"> 
+	    <li data-role="list-divider">Attempts </li>	
+	</ul>
+  </div>
+  
+  
+  <div data-role="footer"  data-position="fixed">&nbsp;</div>
+  
+</div>
+
 
 
 <!---

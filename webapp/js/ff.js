@@ -3,10 +3,9 @@ var currentTeacher = null;
 var currentCourse = null;
 var teacherCourses = null;
 var currentStudents = null;
+var currentStudent = null;
 
-fat_fractal.debug = true;
-
-
+//fat_fractal.debug = true;
 
 var Teacher = function(){
 	this.username;
@@ -17,7 +16,7 @@ var Teacher = function(){
 };
 
 var Course = function(){
-	this.classid;
+	this.classId;
 	this.clazz = 'MFCourse';
 	this.teacherId;
 	this.guid = null;
@@ -43,6 +42,7 @@ var Attempt = function(){
 	this.date;
 	this.studentid;
 	this.correct;
+	this.activity;
 };
 
 $(document).on("pagechange",function(event,data){
@@ -67,22 +67,25 @@ if(currentPage === "coursesListPage"){
 			coursesListPageInit();
 			
 	}
+if(currentPage === "studentsAttemptPage"){
+	if(currentCourse){
+		$("#student_info").replaceWith(currentStudent.firstname +" "+ currentStudent.lastname);
+		getAttempts(currentStudent,displayAttempts);				
+	}
+	else{
+		console.log("Potential problem. Current course doesn't exist '");
+	}
+}	
 
 if(currentPage === "coursePage"){
 	if(!currentCourse){
 			console.log("Potential Problem - current course shouldn't be null");
+			$.mobile.changePage("#loginPage");			
 	}
 		coursePageInit();
 
 }		
 });
-
-
-
-
-//registration page
-
-
 
 //does exist
 function checkTeacher(successCallback, teacher){
@@ -96,7 +99,6 @@ function checkTeacher(successCallback, teacher){
 
 function registerSuccess(returnedData, statusMessage, teacher)
 {
-	
 	if(returnedData.length ==0){
 	//proceed
 	fat_fractal.createObjAtUri(teacher, "MFTeacher",
@@ -173,9 +175,15 @@ function login_user(username, password){
 //single page
 function coursePageInit()
 {
-	console.log("course page");	
-	//get students
-	displayAllStudentsForCourse(currentCourse,getStudentsCallback);		
+	if(!currentCourse)
+	{
+		console.log("course page possible problem. Course doesn't exist " );			
+	}
+	else{
+		//get students
+		displayAllStudentsForCourse(currentCourse,getStudentsCallback);			
+	}
+	
 }
 
 
@@ -183,7 +191,7 @@ function displayAllStudentsForCourse(course, callback)
 {
 	if(!course) {console.log("course is null"); return;}
 	
-	var url = "ff/resources/MFStudent/(classid eq '"+course.classid+"')";
+	var url = "ff/resources/MFStudent/(classId eq '"+course.classId+"')";
 	fat_fractal.getArrayFromUri(url, function(returnedData, statusMessage) {
 			
 			console.log("Get Students" + statusMessage)
@@ -199,11 +207,11 @@ function getStudentsCallback(returnedData, statusMessage){
 	if(returnedData.length >0){
 		
 	$("#student_list_view").empty();
-	$("#student_list_view").append('<li data-role="list-divider">Students in '+ +' </li>');	
+	$("#student_list_view").append('<li data-role="list-divider">Students in '+currentCourse.classId +' </li>');	
 		
 		for(var i =0; i< returnedData.length;i++){
 		var student = currentStudents[i];
-		$("#student_list_view").append('<li><a href="#" onClick="showProgress(i)">'+student.firstname + " " + student.lastname+'</a></li>');
+		$("#student_list_view").append('<li><a href="#" onClick="showProgress('+i+')">'+student.firstname + " " + student.lastname+'</a></li>');
 					
 		}	
 	}
@@ -220,8 +228,56 @@ function getStudentsCallback(returnedData, statusMessage){
 }
 
 
-function showProgress(){
-	
+function showProgress(index){
+	currentStudent = currentStudents[index];	
+	$.mobile.changePage("#studentsAttemptPage");
+
+}
+
+function refreshAttempts(){
+	getAttempts(currentStudent, displayAttempts);	
+}
+
+function getAttempts(student, callback){
+	var url = "ff/resources/MFAttempt/(userId eq '"+student.guid+" activity asc')";
+		url = "ff/resources/MFAttempt/(userId eq 'T1uY3zMl0jeYPAcrZYSjk6')?sort=activity asc";
+		fat_fractal.getArrayFromUri(url, function(returnedData, statusMessage) {	
+	    console.log("Get Attempts " + statusMessage );
+		callback(returnedData, statusMessage);
+		displayAttempts(returnedData, statusMessage);
+			
+	});	
+}
+
+function displayAttempts(returnedData, statusMessage){
+	$("#student_attempts_list_view").empty();
+		$("#student_attempts_list_view").append('<li data-role="list-divider">List of Atempts </li>');	
+		var attempts = returnedData;
+		var cid = -1; 
+		if(returnedData.length >0){
+			for(var i =0; i< returnedData.length;i++){
+					var attempt=  returnedData[i];
+					if(attempt.activity != cid){
+						$("#student_attempts_list_view").append('<li data-role="list-divider">Activity '+attempt.activity +'</li>');		
+						cid = attempt.activity;
+					}
+					
+					if(attempt.score == 1 || attempt.score === "1"){
+		 				$("#student_attempts_list_view").append('<li data-icon="false"><a href="#" data-icon="check" >Activity '+ attempt.activity+' Correct: '+  attempt.score+' Date: '+  attempt.attempt_date+'</a></li>');
+					}
+					else{
+						$("#student_attempts_list_view").append('<li data-icon="false"><a href="#" data-icon="delete" >Activity '+ attempt.activity+' Correct: '+  attempt.score+ ' Date: '+ attempt.attempt_date+'</a></li>');
+		
+					}
+				}					
+		}
+		
+		if ( $('#student_attempts_list_view').hasClass('ui-listview')) {
+			$('#student_attempts_list_view').listview('refresh');
+			} 
+		else {
+			$('#student_attempts_list_view').trigger('create');
+		}
 	
 }
 
