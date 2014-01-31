@@ -29,11 +29,14 @@
     <input type="password" id="login_password" placeholder="password"/>
     <a href="#" data-role="button" onclick='login_user($("#login_name"),$("#login_password"))'>Login</a> <a href="#registrationPage" data-role="button">Register</a>
     <p id="statusMessage"> </p>
-    <a href="https://itunes.apple.com/us/app/fractionville/id765951254?ls=1&mt=8" target="_blank"><img src="resources/App_Store_Badge_EN_small.png" />
+   	 	<a href="https://itunes.apple.com/us/app/fractionville/id765951254?ls=1&mt=8" target="_blank"><img src="resources/App_Store_Badge_EN_small.png" />
     </a>
+    <p>
+    <a href="https://docs.google.com/document/d/1zj1JHRfO36s8z9hxsmMGwe5xdYrZAFTEksS245I1Iag/edit?usp=sharing" target="blank">Teacher's Guide</a>
+    </p>
     
   </div>
-  <div data-role="footer"  data-position="fixed"></div>
+  <div data-role="footer"  data-position="fixed">&nbsp;</div>
 </div>
 
 <div data-role="page" id="registrationPage" >
@@ -91,8 +94,18 @@
      <div data-role="header" data-add-back-btn="true" data-back-btn-text="Back">
         <h1>Fractionville</h1>
     </div>
+	
   <div data-role="content">
-  	<p id="student_info"></p>
+  	<p id="student_info">&nbsp;</p>
+	<p id="student_status">&nbsp;</p>
+	<textarea id="message_text"></textarea>
+	
+	<a href="#" onclick="sendMessage()" data-role="button"  >Send Message</a>
+ <br>
+    	<ul data-role="listview" id="student_messages_list_view"> 
+	    <li data-role="list-divider">Messages</li>	
+	</ul>
+<br> 
 	<a href="#" onclick="refreshAttempts()" data-role="button"  >Refresh</a>
   <br>
   	

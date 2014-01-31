@@ -13,6 +13,7 @@ var Teacher = function(){
 	this.school;
 	this.clazz = 'MFTeacher';
 	this.guid = null;
+	//add teacher's name and lastname
 };
 
 var Course = function(){
@@ -35,7 +36,7 @@ var Student = function(){
 
 var Attempt = function(){
 	this.classId;
-	this.clazz = 'MFAttempt';
+	this.clazz = 'MFFrAttempt';
 	this.guid = null;
 	this.answer;
 	this.question;
@@ -45,6 +46,20 @@ var Attempt = function(){
 	this.activity;
 };
 
+var Message = function(){
+	this.clazz = 'MFFeedbackMessage';
+	this.guid = null;
+	this.studentid;
+	this.teacherid;
+	this.teachername;
+	this.teacherlastname;
+	this.messagetext;
+	this.messagedate;
+};
+
+
+
+
 $(document).on("pagechange",function(event,data){
 	console.log(" page change  ");
 
@@ -53,7 +68,7 @@ $(document).on("pagechange",function(event,data){
 		
 		}
 
-if(currentPage !='loginPage'){
+if(currentPage !='loginPage' && currentPage != "registrationPage" ){
 	if(!currentTeacher){
 		$.mobile.changePage("#loginPage");	
 	
@@ -68,9 +83,11 @@ if(currentPage === "coursesListPage"){
 			
 	}
 if(currentPage === "studentsAttemptPage"){
-	if(currentCourse){
+	if(currentCourse&&currentStudent&&currentTeacher){
 		$("#student_info").replaceWith(currentStudent.firstname +" "+ currentStudent.lastname);
-		getAttempts(currentStudent,displayAttempts);				
+		getAttempts(currentStudent,displayAttempts);
+		refreshMessages(currentTeacher,currentStudent);
+				
 	}
 	else{
 		console.log("Potential problem. Current course doesn't exist '");
@@ -116,7 +133,7 @@ function registerSuccess(returnedData, statusMessage, teacher)
 }
 
 function loginSuccess(returnedData,statusMessage,teacher){
-	console.log("Login Return data"+statusMessage + "   " + returnedData[0].guid);	
+	//console.log("Login Return data"+statusMessage + "   " + returnedData[0].guid);	
 	if(returnedData.length ==1){
 		
 		//set current teacher 
@@ -169,7 +186,66 @@ function login_user(username, password){
 	checkTeacher(loginSuccess,temp_teacher);
 }
 
+/*__________________________________FEEDBACK Section_____________________________________________ */
+function sendMessage(){
+	//from current teacher to current student 
+	var message = new Message();
+	message.teacherid = currentTeacher.guid;
+	message.teachername =currentTeacher.username;
+	//teacher.username
+	message.teacherlastname = currentTeacher.lastname;
+	message.messagetext = $("#message_text").val();
+	message.studentid = currentStudent.guid;
+	message.messagedate = new Date();
+	
+	fat_fractal.createObjAtUri(message, "MFFeedbackMessage",
+                        function(returnedData, statusMessage) { 
+								$("#student_status").replaceWith("Message Sent."); 
+									//refresh the feedback list
+									refreshMessages(currentTeacher, currentStudent);
+								},
+                        function(statusCode, statusMessage) { 
+								$("#student_status").replaceWith("We couldn't send your message.");
+	});											
+}	
+
+function refreshMessages(teacher, student){
+
+	var url = "ff/resources/MFFeedbackMessage/((studentid eq '"+student.guid+"') and (teacherid eq '"+teacher.guid+"'))";
+	fat_fractal.getArrayFromUri(url, function(returnedData, statusMessage) {			
+			console.log("Get Students" + statusMessage)
+			displayMessages(returnedData);
+		});	
+}
+
+function displayMessages(returnedData){
+	//student_messages_list_view
+	$("#student_messages_list_view").empty();
+	$("#student_messages_list_view").append('<li data-role="list-divider">Messages</li>');
+	
+	if(returnedData.length >0){
+			for(var i =0; i< returnedData.length;i++){
+				var message=  returnedData[i];
+				var date = new Date(message.messagedate);
+				$("#student_messages_list_view").append('<li data-icon="false"><div> Date: '+  date+ ' <br> Message: '+  message.messagetext+'</div></li>');
+								
+				}					
+		}
+		//refreshMessages(currenTeacher, currentStudent);
+		if ( $('#student_messages_list_view').hasClass('ui-listview')) {
+			$('#student_messages_list_view').listview('refresh');
+			} 
+		else {
+			$('#student_messages_list_view').trigger('create');
+		}
+	
+	
+}
+
+
 /* __________________________________COURSES MANAGEMENT SECTION __________________________________*/
+
+
 
 
 //single page
@@ -239,8 +315,8 @@ function refreshAttempts(){
 }
 
 function getAttempts(student, callback){
-	var url = "ff/resources/MFAttempt/(userId eq '"+student.guid+" activity asc')";
-		url = "ff/resources/MFAttempt/(userId eq 'T1uY3zMl0jeYPAcrZYSjk6')?sort=activity asc";
+	var url = "ff/resources/MFFrAttempt/(userId eq '"+student.guid+"')? sort=activity asc";
+//		url = "ff/resources/MFFrAttempt/(userId eq 'T1uY3zMl0jeYPAcrZYSjk6')?sort=activity asc";
 		fat_fractal.getArrayFromUri(url, function(returnedData, statusMessage) {	
 	    console.log("Get Attempts " + statusMessage );
 		callback(returnedData, statusMessage);
@@ -261,13 +337,12 @@ function displayAttempts(returnedData, statusMessage){
 						$("#student_attempts_list_view").append('<li data-role="list-divider">Activity '+attempt.activity +'</li>');		
 						cid = attempt.activity;
 					}
-					
+					var date = new Date(attempt.attempt_date);					
 					if(attempt.score == 1 || attempt.score === "1"){
-		 				$("#student_attempts_list_view").append('<li data-icon="false"><a href="#" data-icon="check" >Activity '+ attempt.activity+' Correct: '+  attempt.score+' Date: '+  attempt.attempt_date+'</a></li>');
+		 				$("#student_attempts_list_view").append('<li data-icon="check"><a href="#" data-icon="check" >Activity '+ attempt.activity+' Date: '+ date+'</a></li>');
 					}
 					else{
-						$("#student_attempts_list_view").append('<li data-icon="false"><a href="#" data-icon="delete" >Activity '+ attempt.activity+' Correct: '+  attempt.score+ ' Date: '+ attempt.attempt_date+'</a></li>');
-		
+						$("#student_attempts_list_view").append('<li data-icon="delete"><a href="#" data-icon="delete" >Activity '+ attempt.activity+' Date: '+ date+'</a></li>');
 					}
 				}					
 		}
@@ -385,19 +460,16 @@ $(document).ready(function () {
   		//your code here
 			// initialize the FatFractal library
   
-     var attempt = function () {
-      
-        this.clazz = "MFAttempt"; this.guid = null; this.version = null;
-    };
-		//reloadAttempts()
+//      var attempt = function () {
+//       
+//         this.clazz = "MFFractalAttempt"; this.guid = null; this.version = null;
+//     };
+// 		//reloadAttempts()
 	
 	ff.login("cdt_user", "Stany174",
     function (loggedInUser) {
 
 	console.log("Success");
-	//$.mobile.changePage( "#registrationPage", { transition: "slideup", changeHash: false });	
-    
-    
     
     },
     
@@ -409,114 +481,3 @@ $(document).ready(function () {
 });
 
 	
-/*	
-function reloadAttempts(){
-$(document).ready(function() {$("#attemptsTable").find("tr:gt(0)").remove();});
-     var url = "ff/resources/MFAttempt";
-		 if($("#className").val().length >0)
-			{
-				url = "ff/resources/MFAttempt/(mfclassId eq '"+$("#className").val()+"')";
-			}
-			else{
-                              
-                        	return;
-			}
-                        
-	  
-    	fat_fractal.getArrayFromUri(url, function(returnedData, statusMessage) {
-                
-                if (returnedData != null) {
-                 
-                    for (var i = 0; i < returnedData.length; i++) {
-     									 var date = new Date(returnedData[i].attempt_date);
-											 var n = returnedData[i].name;
-	      							 var fr = 	returnedData[i].fractions;
-											 var fr_str ="";
-											 for(var j=0;j<fr.length;j++){
-												 	fr_str = fr_str +" "+fr[j].numerator  +"/" + fr[j].denominator;
-	  										}
-		
-											 var date_sts =date.getFullYear()+"/"+date.getMonth()+" " +date.getHours()+":"+date.getMinutes();
-                     	 var score = returnedData[i].score;
-                       var activity = returnedData[i].activity;
-											 var nr = i+1;
-											 var class_name="correct";
-											 if(score ==1){
-													class_name="correct" 
-											 }
-											 else{
-												 class_name="incorrect"
-											}
-											                                                                   
-											 
-			$("#attemptsTable").append("<tr><td>"+activity+"</td><td>"+n+"</td><td class='"+class_name+"'>"+class_name +"</td><td>"+fr_str+"</td><td>"+date+"</td></tr>");
-										
-										}
-                }
-            }
-    );
-			
-			}
-		
-*/
-/* 
-    // the "viewModel" which we attach to our html using KnockoutJS
-    var viewModel = {
-        userName: new ko.observable(""), password: new ko.observable(""),
- 
-        // Yup - it's a login function!
-        login: function() {
-            fat_fractal.login(viewModel.userName(), viewModel.password(),
-                    function(loggedInUser) { viewModel.userName(loggedInUser.userName); viewModel.password(""); },
-                    function(statusCode, statusMessage) { alert("Failed to login: " + statusMessage); });
-        },
- 
-        // And a logout function
-        logout: function() {
-            fat_fractal.logout(function(logoutResponse) { viewModel.userName(""); viewModel.password(""); },
-                    function(statusCode, statusMessage) { alert("Failed to logout: " + statusMessage); });
-        },
- 
-        // An array to hold our list of furniture objects
-        furniture: new ko.observableArray([]),
- 
-        // Function called when the "Add a piece of Furniture" button is clicked
-        addFurniture: function () {
-            viewModel.furniture.push(new Furniture());
-        },
- 
-        // Function called when the "Save" button is clicked for a Furniture object
-        // If the object's guid is null, then we'll CREATE, otherwise we'll UPDATE
-        saveFurniture: function (furniture) {
-            if (furniture.guid == null)
-                fat_fractal.createObjAtUri(furniture, "Furniture",
-                        function(returnedData, statusMessage) { viewModel.furnitureUpdated(furniture); },
-                        function(statusCode, statusMessage) { alert("Failed to create Furniture: " + statusMessage); });
-            else
-                fat_fractal.updateObj(furniture,
-                        function(returnedData, statusMessage) { viewModel.furnitureUpdated(furniture); },
-                        function(statusCode, statusMessage) { alert("Failed to update Furniture: " + statusMessage); });
-        },
- 
-        // Function called when the "Delete" button is clicked for a Furniture object
-        removeFurniture: function (furniture) {
-            fat_fractal.deleteObj(furniture,
-                    function(statusMessage) { viewModel.furniture.remove(furniture); },
-                    function(statusCode, statusMessage) { alert("Failed to delete Furniture: " + statusMessage); });
-        },
- 
-        // We're using a very simple view model here, just an observable array.
-        // When a piece of furniture is updated via a response from the server, then
-        // we need to let knockout know that the array has been modified
-        blank: new Furniture(),
-        furnitureUpdated: function(furniture) {
-            viewModel.furniture.replace(furniture, viewModel.blank);
-            viewModel.furniture.replace(viewModel.blank, furniture);
-        }
-    };
- */
-    // Apply the KnockoutJS bindings
- //   ko.applyBindings(viewModel);
- 
-    // Finally, now everything is initialized, get all the Furniture from the server
-  
