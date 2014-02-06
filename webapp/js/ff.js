@@ -251,6 +251,7 @@ function displayMessages(returnedData){
 //single page
 function coursePageInit()
 {
+	$("#student_list_view").empty();
 	if(!currentCourse)
 	{
 		console.log("course page possible problem. Course doesn't exist " );			
@@ -315,10 +316,10 @@ function refreshAttempts(){
 }
 
 function getAttempts(student, callback){
-	var url = "ff/resources/MFFrAttempt/(userId eq '"+student.guid+"')? sort=activity asc";
+	var url = "ff/resources/MFFrAttempt/(userId eq '"+student.guid+"')?sort=activity asc";
 //		url = "ff/resources/MFFrAttempt/(userId eq 'T1uY3zMl0jeYPAcrZYSjk6')?sort=activity asc";
 		fat_fractal.getArrayFromUri(url, function(returnedData, statusMessage) {	
-	    console.log("Get Attempts " + statusMessage );
+	  
 		callback(returnedData, statusMessage);
 		displayAttempts(returnedData, statusMessage);
 			
@@ -333,6 +334,7 @@ function displayAttempts(returnedData, statusMessage){
 		if(returnedData.length >0){
 			for(var i =0; i< returnedData.length;i++){
 					var attempt=  returnedData[i];
+					console.log("ACtivity : "+ attempt.activity);
 					if(attempt.activity != cid){
 						$("#student_attempts_list_view").append('<li data-role="list-divider">Activity '+attempt.activity +'</li>');		
 						cid = attempt.activity;
@@ -427,7 +429,8 @@ function checkClassSuccess(returnedData, statusMessage,classId){
 	
 				fat_fractal.createObjAtUri(course, "MFCourse",
                         function(returnedData, statusMessage) { 
-								$("#courseStatusMessage").replaceWith("Course ID created. Now share it with your students."); 
+												$("#courseStatusMessage").replaceWith("Course ID created. Now share it with your students."); 
+												displayAllCoursesForTeacher(currentTeacher,getCoursesCallback);	
 												
 								},
                         function(statusCode, statusMessage) { 
@@ -465,6 +468,8 @@ $(document).ready(function () {
 //         this.clazz = "MFFractalAttempt"; this.guid = null; this.version = null;
 //     };
 // 		//reloadAttempts()
+	
+	
 	
 	ff.login("cdt_user", "Stany174",
     function (loggedInUser) {
